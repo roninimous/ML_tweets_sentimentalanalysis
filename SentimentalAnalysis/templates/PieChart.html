@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>VISUALIZATION</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="shortcut icon" href="./static/images/favicon.ico" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Rubik' rel='stylesheet'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            font: 20px Montserrat, sans-serif;
+            line-height: 1.8;
+            color: #f5f6f7;
+        }
+
+        p {
+            font-size: 16px;
+            font-family: 'Rubik';
+        }
+
+        .margin {
+            margin-bottom: 45px;
+        }
+
+        .bg-1 {
+            background-color: #1abc9c;
+            /* Green */
+            color: #ffffff;
+        }
+
+        .bg-2 {
+            background-color: #474e5d;
+            /* Dark Blue */
+            color: #00BFFF;
+        }
+
+        .bg-3 {
+            background-color: #ffffff;
+            /* White */
+            color: #555555;
+        }
+
+        .bg-4 {
+            background-color: #2f2f2f;
+            /* Black Gray */
+            color: #fff;
+        }
+
+        .bg-5 {
+            background-color: #00BFFF;
+            /* Light Blue */
+            color: #ffffff;
+        }
+
+        .container-fluid {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+
+        .navbar {
+            padding-top: 15px;
+            padding-bottom: 15px;
+            border: 0;
+            border-radius: 0;
+            margin-bottom: 0;
+            font-size: 12px;
+            letter-spacing: 5px;
+        }
+
+        .navbar-nav li a:hover {
+            color: #00BFFF !important;
+        }
+
+        .column {
+            float: left;
+            width: 50%;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .center {
+            margin: auto;
+            width: 70%;
+            border: 3px solid pink;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            padding: 10px
+        }
+
+        .tooltip {
+            font-size: 2rem;
+        }
+        .zoom:hover {
+  transform: scale(1.1); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+    </style>
+</head>
+
+<body class="bg-2">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-default" style="box-shadow: 0px 10px 10px #292e3b;">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/home"><b>SSAA PROJECT</b></a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="/sentiment_analyzer">LIVE TWEETS</a></li>
+                    <li><a href="/zeroshot_analyzer">ANALYZE PHRASE</a></li>
+                    <li><a href="/visualize">VISUALIZATION</a></li>
+
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>LOG OUT /{% if session['user_id'] %}
+                        {{session['user_id']}}
+                        {%endif%}</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- First Container -->
+    <div class="container-fluid bg-2">
+        
+            <h1 style="text-align: center;"><b>THE VISUALIZATION PAGE</b></h1><br>
+            <div class="" style="padding-top: 100px; text-align: center;">
+                <h2 style="text-align:center;"><b>PIE CHART</b></h2><img class="zoom" style="width: 100%;height:100%;max-width: 600px;" src="/static/images/plot1.png">
+            </div>
+        <div><br>
+            <img src="/static/images/sentiment_wordclouds.png"
+                 style="width:100%;height:100%;margin:auto;box-shadow: 0px 10px 10px #292e3b">
+        </div>
+
+            <div style="background-color: dark-blue; font-size: 30px;text-align:center">
+                <small style="color: #48c7b6"
+                ><br /><p style="font-size:22px;">These visualizations are generated based on the latest live
+                    tweets analysis on our webpage.</p></small
+                ><br /><br />
+                <a href="sentiment_analyzer" class="btn btn-danger btn-lg" style="width: 30%"> BACK </a>
+                    <!-- <button href="sentiment_analyzer" class="btn btn-danger btn-lg" style="width: 30%">BACK</button> -->
+
+            </div><br><br>
+        
+        
+    </div>
+    <!-- Footer -->
+
+    <footer class="footer container-fluid bg-4 text-center">
+        <p>Our team SSAA (Sombath, Saren, Arben, Alex)</p>
+    </footer>
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        function myFunction() {
+            var x = document.getElementById("myDIV");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+    </script>
+</body>
+
+</html>

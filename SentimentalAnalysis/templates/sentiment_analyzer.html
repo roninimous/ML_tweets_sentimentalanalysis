@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>LIVE TWEETS</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="shortcut icon" href="./static/images/favicon.ico" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    body {
+      font: 20px Montserrat, sans-serif;
+      line-height: 1.8;
+      color: #f5f6f7;
+    }
+
+    p {
+      font-size: 16px;
+    }
+
+    .margin {
+      margin-bottom: 45px;
+    }
+
+    .bg-1 {
+      background-color: #1abc9c;
+      /* Green */
+      color: #ffffff;
+    }
+
+    .bg-2 {
+      background-color: #474e5d;
+      /* Dark Blue */
+      color: #00bfff;
+    }
+
+    .bg-3 {
+      background-color: #ffffff;
+      /* White */
+      color: #555555;
+    }
+
+    .bg-4 {
+      background-color: #2f2f2f;
+      /* Black Gray */
+      color: #fff;
+    }
+
+    .bg-5 {
+      background-color: #00bfff;
+      /* Light Blue */
+      color: #ffffff;
+    }
+
+    .container-fluid {
+      padding-top: 70px;
+      padding-bottom: 70px;
+    }
+
+    .navbar {
+      padding-top: 15px;
+      padding-bottom: 15px;
+      border: 0;
+      border-radius: 0;
+      margin-bottom: 0;
+      font-size: 12px;
+      letter-spacing: 5px;
+    }
+
+    .navbar-nav li a:hover {
+      color: #00bfff !important;
+    }
+
+    .column {
+      float: left;
+      width: 50%;
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    .center {
+      border: 3px solid #00bfff;
+      border-radius: 5px;
+      padding: 10px;
+      box-shadow: 0px 0px 30px #292e3b;
+    }
+
+    .footer {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      padding: 10px;
+    }
+
+    .tooltip {
+      font-size: 2rem;
+    }
+
+    .loader {
+      margin: auto;
+      border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid #3498db;
+      width: 120px;
+      height: 120px;
+      -webkit-animation: spin 2s linear infinite;
+      /* Safari */
+      animation: spin 2s linear infinite;
+    }
+
+    /* Safari */
+    @-webkit-keyframes spin {
+      0% {
+        -webkit-transform: rotate(0deg);
+      }
+
+      100% {
+        -webkit-transform: rotate(360deg);
+      }
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* override boostrap class */
+    .form-control {
+      width: 80%;
+      margin: auto;
+      height: 55px;
+    }
+
+    .btn-override {
+      width: 80% !important;
+      margin: auto;
+    }
+
+    .form-override {
+      width: 80%;
+      margin: auto;
+    }
+
+    @media(max-width: 700px) {
+
+      .loader {
+        /* width: 100%; */
+        /* margin-left:100%; */
+      }
+
+    }
+  </style>
+</head>
+
+<body class="bg-2">
+  <!-- Navbar -->
+
+  <nav class="navbar navbar-default" style="box-shadow: 0px 10px 10px #292e3b;">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/home"><b>SSAA PROJECT</b></a>
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav">
+          <li><a href="/sentiment_analyzer">LIVE TWEETS</a></li>
+          <li><a href="/zeroshot_analyzer">ANALYZE PHRASE</a></li>
+          <li><a href="/visualize">VISUALIZATION</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a href="/logout"><span class="glyphicon glyphicon-log-out"></span>LOG OUT /{% if session['user_id'] %} {{session['user_id']}}
+              {%endif%}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- First Container -->
+
+  <div class="container-fluid bg-2">
+    <div class="row">
+      <h1 style="text-align: center">
+        <b>LIVE TWEET ANALYSIS PAGE</b>
+      </h1>
+      <br />
+      <div class="col-sm-12 col-md-6">
+        <form method="post" style="text-align: center" action="sentiment_logic" class="form-override">
+          <label>SEARCH KEYWORD FROM TWEETS</label><br />
+          <input type="text" class="form-control" name="keyword" placeholder="Pfizer, Astra Zeneca" required/>
+          <br />
+          <label>AMOUNT OF TWEET</label>
+
+          <input type="number" onkeydown="javascript: return event.keyCode === 8 ||
+event.keyCode === 46 ? true : !isNaN(Number(event.key))" class="form-control" name="tweets" placeholder="Min = 1, Max = 500" min="1" max="500" required/><br>
+
+          <input type="submit" class="btn btn-primary btn-block btn-lg btn-override" value="ANALYZE" /><br>
+          <h4 style="color: #d64d4d;">
+            {% if error_msg %}{{error_msg}}{% endif %}
+          </h4>
+          {% if polarity %}<br>
+          <h1 style="
+                background-color: #51d897;
+                color: white;
+                text-align: center;
+                font-size: 20px;
+                border-radius: 5px;
+                width: 80%;
+                font-weight: bold;
+                margin: auto;
+              ">
+            <br />Reaction of people on "{{keyword}}" by analyzing {{tweets}}
+            tweets ({{numspam}} redundances)<br /><br />
+          </h1><br>
+          <h4 style="color: #d64d4d;">
+            {% if wordcloud_error %}{% set list1 = wordcloud_error.split(';') %}
+            {{ list1[0] }}<br>{{ list1[1] }}
+            {% endif %}
+          </h4>
+          <div style="
+                background-color: dark-blue;
+                font-size: 20px;
+                text-align: center;
+                margin: auto;
+                width: 80%;
+              ">
+            <a href="visualize" class="btn btn-primary btn-block btn-lg" style="font-weight: bold">SEE VISUALIZATION</a>
+          </div>
+
+          {% endif %}
+        </form>
+      </div>
+      
+      <div class="col-sm-12 col-md-6">
+        <div class="row">
+        <div style="text-align: center">
+          <div class="mt-100">
+            {% if polarity %}
+            <h1 style="color: #00bfff; text-align: center; font-size: 50px">
+              <b>GENERAL REPORT</b>
+            </h1>
+            <div>
+              <h1 style="text-align: center; font-size: 20px; color: #fff">
+                The Average Sentiment Result is <b style="color: {{result_color}}">{{htmlpolarity}}</b>
+              </h1>
+              {% else %}
+              <div class="loader" style="margin-top:10%;"></div>
+              {%endif%}
+            </div>
+          </div>
+          <!--end of general report-->
+          <!--start of polarity value-->
+          <div class="mt-100">
+            {% if polarity %}
+            <div>
+              <h1 style="text-align: center; font-size: 20px; color: #fff">
+                The Average Sentiment
+                <a style="color: #1abc9c" onMouseOver="this.style.color='white'" onMouseOut="this.style.color='#1abc9c'"
+                  href="#" data-toggle="tooltip" title="Polarity is float which lies
+    in the range of [-1,1] where 0<statement<=1 means positive statement, 0 means a neutral statement,
+    and 0>statement>=-1 means a negative statement."><b>Polarity</b></a>
+                is {{polarity}}
+              </h1>
+              <h1 style="text-align: center; font-size: 20px; color: #fff">
+                The Average Sentiment
+                <a style="color: #1abc9c" onMouseOver="this.style.color='white'" onMouseOut="this.style.color='#1abc9c'"
+                  href="#" data-toggle="tooltip" title="Subjectivity is float which lies between
+     [0,1]. Subjectivity quantifies the amount of personal opinion and factual information contained in
+     the text. The higher subjectivity means that the text contains personal opinion rather than factual
+      information."><b>Subjectivity</b></a>
+                is {{subjectivity}}
+              </h1>
+              {%endif%}
+            </div>
+          </div>
+        </div>
+        <div>
+          {% if polarity %}
+          <h1 style="color: #00bfff; text-align: center; font-size: 50px">
+            <br /><b>DETAILED REPORT</b>
+          </h1>
+          <div style="text-align: center; font-size: 20px; color: #fff">
+            <h2 class="report-text" style="font-size: 20px">
+              {{positive}}% of tweets are
+              <b style="color: #51d857">POSITIVE</b>
+            </h2>
+            <h2 class="report-text" style="font-size: 20px">
+              {{neutral}}% of tweets are <b style="color: #c2a866">NEUTRAL</b>
+            </h2>
+            <h2 class="report-text" style="font-size: 20px">
+              {{negative}}% of tweets are
+              <b style="color: #d64d4d">NEGATIVE</b>
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <br /><br />
+    <div class="center">
+      <!--end of report-->
+
+      <h1 style="color: #00bfff; text-align: center; font-size: 50px">
+        <br /><b>TWEETS ANALYZED</b>
+      </h1>
+      <div style="
+            height: 300px;
+            border: 1px solid #ccc;
+            font: 20px/26px;
+            overflow: auto;
+          ">
+        <p style="color: white; text-align: left">
+          {% for text in textArray%} {{text}}<br />{%endfor%}
+        </p>
+        {%endif%}
+      </div>
+
+      <br /><br /><br /><br />
+    </div>
+  </div>
+
+
+  <!-- Footer -->
+
+  <footer class="footer container-fluid bg-4 text-center">
+    <p>Our team SSAA (Sombath, Saren, Arben, Alex)</p>
+  </footer>
+  <script>
+    $(document).ready(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
+</body>
+
+</html>
